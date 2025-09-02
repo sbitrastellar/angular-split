@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Variable Height Split Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .test-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      h2 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+      .feature-list {
+        list-style: none;
+        padding: 0;
+      }
+      .feature-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+      }
+      .feature-list li:before {
+        content: '✓ ';
+        color: green;
+        font-weight: bold;
+      }
+      code {
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+      }
+      .implementation-details {
+        background: #f9f9f9;
+        padding: 15px;
+        border-left: 4px solid #4caf50;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>Angular Split - Variable Height Feature</h1>
+      <p>Successfully implemented a new <code>variableHeight</code> input option for the SplitComponent.</p>
+    </div>
+
+    <div class="test-container">
+      <h2>✅ Feature Implementation Complete</h2>
+      <ul class="feature-list">
+        <li>Added <code>variableHeight</code> input property to SplitComponent</li>
+        <li>Implemented custom drag handling logic for variable height mode</li>
+        <li>Modified CSS grid template calculation to support dynamic height</li>
+        <li>Created comprehensive examples with nested splitters</li>
+        <li>Tested build and compilation successfully</li>
+      </ul>
+    </div>
+
+    <div class="test-container">
+      <h2>How It Works</h2>
+      <div class="implementation-details">
+        <h3>When <code>variableHeight="true"</code> is set on a vertical split:</h3>
+        <ol>
+          <li><strong>Dynamic Height:</strong> The split component's height adjusts automatically (height: auto)</li>
+          <li><strong>Special Drag Behavior:</strong> Dragging a gutter only resizes the area above it</li>
+          <li><strong>Fixed Areas Below:</strong> All areas below the dragged gutter maintain their original sizes</li>
+          <li><strong>Component Growth:</strong> The entire component grows or shrinks based on the top area's size</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="test-container">
+      <h2>Usage Example</h2>
+      <pre style="background: #f5f5f5; padding: 15px; overflow-x: auto">
+&lt;as-split
+  direction="vertical"
+  unit="pixel"
+  <strong style="color: #4CAF50;">[variableHeight]="true"</strong>
+  [gutterSize]="11"
+&gt;
+  &lt;as-split-area [size]="150" [minSize]="50" [maxSize]="300"&gt;
+    &lt;!-- This area changes size when dragging --&gt;
+  &lt;/as-split-area&gt;
+  
+  &lt;as-split-area [size]="100"&gt;
+    &lt;!-- This area keeps its size --&gt;
+  &lt;/as-split-area&gt;
+&lt;/as-split&gt;
+        </pre>
+    </div>
+
+    <div class="test-container">
+      <h2>Files Modified</h2>
+      <ul>
+        <li><code>projects/angular-split/src/lib/split/split.component.ts</code> - Core implementation</li>
+        <li><code>src/app/examples/variable-height/variable-height.component.ts</code> - Example component</li>
+        <li><code>src/app/examples/examples.routes.ts</code> - Added route for example</li>
+        <li><code>src/app/examples/example-types.ts</code> - Added enum value</li>
+      </ul>
+    </div>
+
+    <div class="test-container">
+      <h2>To Test</h2>
+      <p>Run <code>npm start</code> and navigate to <code>http://localhost:4200/examples/variable-height</code></p>
+    </div>
+  </body>
+</html>

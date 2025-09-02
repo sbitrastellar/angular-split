@@ -1,3 +1,13 @@
+## 20.1.0 (2025-09-02)
+
+- feat: add Variable Height Mode for dynamic content-driven layouts
+  - **New Input Property**: `variableHeight` - enables dynamic height adjustment based on content
+  - **Enhanced Drag Behavior**: Asymmetric resizing where only the area above the gutter changes size
+  - **CSS Grid Integration**: Automatic height sizing for vertical splits in variable height mode
+  - **Backward Compatible**: Opt-in feature that doesn't affect existing implementations
+  - **Use Cases**: Perfect for dashboards and content-driven layouts
+  - **Performance Optimized**: Minimal DOM updates during resize operations
+
 ## 20.0.0 (2025-07-21)
 
 - fix: allow providing options on root provider (#505) ([fb65d63](https://github.com/angular-split/angular-split/commit/fb65d63)), closes [#505](https://github.com/angular-split/angular-split/issues/505)

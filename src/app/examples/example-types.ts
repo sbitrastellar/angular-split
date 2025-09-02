@@ -13,4 +13,8 @@ export enum ExampleEnum {
   TRANSITION = 'transition',
   WORKSPACE = 'workspace',
   GLOBAL = 'global',
+  VARIABLE_HEIGHT = 'variable-height',
+  DASHBOARD = 'dashboard',
+  MIXPANEL = 'mixpanel',
+  DRAG_DROP = 'drag-drop',
 }

@@ -118,6 +118,7 @@ export class SplitComponent {
   readonly gutterDblClickDuration = input(this.defaultOptions.gutterDblClickDuration, {
     transform: numberAttributeWithFallback(this.defaultOptions.gutterDblClickDuration),
   })
+  readonly variableHeight = input(false, { transform: booleanAttribute })
   readonly gutterClick = output<SplitGutterInteractionEvent>()
   readonly gutterDblClick = output<SplitGutterInteractionEvent>()
   readonly dragStart = output<SplitGutterInteractionEvent>()
@@ -157,6 +158,14 @@ export class SplitComponent {
 
   @HostBinding('dir') protected get hostDirBinding() {
     return this.dir()
+  }
+
+  @HostBinding('style.height') protected get hostHeightBinding() {
+    // In variable height mode, let the content determine the height
+    if (this.variableHeight() && this.direction() === 'vertical') {
+      return 'auto'
+    }
+    return null
   }
 
   constructor() {
@@ -464,10 +473,57 @@ export class SplitComponent {
     this.dragMoveToPoint(endPoint, dragStartContext)
   }
 
+  private dragMoveVariableHeight(offset: number, dragStartContext: DragStartContext) {
+    // In variable height mode, we only adjust the area above the gutter
+    // and keep all areas below the gutter at their original sizes
+    const steppedOffset = Math.round(offset / this.gutterStep()) * this.gutterStep()
+    const tempAreasPixelSizes = [...dragStartContext.areasPixelSizes]
+    const areaIndexAbove = dragStartContext.areaBeforeGutterIndex
+    const areaAbove = this._areas()[areaIndexAbove]
+
+    if (!areaAbove || !areaAbove.visible()) {
+      return
+    }
+
+    // Calculate new size for the area above the gutter
+    const currentSize = tempAreasPixelSizes[areaIndexAbove]
+    const minSize = dragStartContext.areaIndexToBoundaries[areaIndexAbove].min
+    const maxSize = dragStartContext.areaIndexToBoundaries[areaIndexAbove].max
+
+    // Apply the offset (positive when dragging down, negative when dragging up)
+    let newSize = currentSize + steppedOffset
+
+    // Clamp to min/max boundaries
+    newSize = Math.max(minSize, Math.min(maxSize, newSize))
+
+    // Update only the area above the gutter
+    tempAreasPixelSizes[areaIndexAbove] = newSize
+
+    // Update the internal size for the area above
+    if (this.unit() === 'pixel') {
+      areaAbove._internalSize.set(newSize)
+    } else {
+      // For percent mode in variable height, we need to recalculate based on new total
+      const totalPixelSize = tempAreasPixelSizes.reduce((sum, size) => sum + size, 0)
+      const percentSize = (newSize / totalPixelSize) * 100
+      areaAbove._internalSize.set(parseFloat(percentSize.toFixed(10)))
+    }
+
+    // Emit drag progress
+    this.dragProgressSubject.next(this.createDragInteractionEvent(dragStartContext.areaBeforeGutterIndex))
+  }
+
   private dragMoveToPoint(endPoint: ClientPoint, dragStartContext: DragStartContext) {
     const startPoint = getPointFromEvent(dragStartContext.startEvent)
     const preDirOffset = this.direction() === 'horizontal' ? endPoint.x - startPoint.x : endPoint.y - startPoint.y
     const offset = this.direction() === 'horizontal' && this.dir() === 'rtl' ? -preDirOffset : preDirOffset
+
+    // Handle variable height mode for vertical splits
+    if (this.variableHeight() && this.direction() === 'vertical') {
+      this.dragMoveVariableHeight(offset, dragStartContext)
+      return
+    }
+
     const isDraggingForward = offset > 0
     // Align offset with gutter step and abs it as we need absolute pixels movement
     const absSteppedOffset = Math.abs(Math.round(offset / this.gutterStep()) * this.gutterStep())
@@ -594,6 +650,11 @@ export class SplitComponent {
         columns.push('0px')
       }
     })
+
+    // In variable height mode with vertical direction, use auto sizing for rows
+    if (this.variableHeight() && this.direction() === 'vertical') {
+      return `${columns.join(' ')} / 1fr`
+    }
 
     return this.direction() === 'horizontal' ? `1fr / ${columns.join(' ')}` : `${columns.join(' ')} / 1fr`
   }

@@ -142,4 +142,43 @@ export const exampleRoutes: Routes = [
     path: 'global-options',
     loadComponent: () => import('./global-options/global-options.component').then((m) => m.GlobalOptionsComponent),
   },
+  {
+    data: {
+      type: ExampleEnum.VARIABLE_HEIGHT,
+      label: 'Variable height split',
+      srcUrl: `${srcUrlBaseApp}/variable-height/variable-height.component.ts`,
+    },
+    path: 'variable-height',
+    loadComponent: () => import('./variable-height/variable-height.component').then((m) => m.VariableHeightComponent),
+  },
+  {
+    data: {
+      type: ExampleEnum.DASHBOARD,
+      label: 'Dynamic Dashboard Builder',
+      srcUrl: `${srcUrlBaseApp}/dashboard-panels/dashboard-panels.component.ts`,
+    },
+    path: 'dashboard-panels',
+    loadComponent: () =>
+      import('./dashboard-panels/dashboard-panels.component').then((m) => m.DashboardPanelsComponent),
+  },
+  {
+    data: {
+      type: ExampleEnum.MIXPANEL,
+      label: 'Mixpanel-style Analytics Dashboard',
+      srcUrl: `${srcUrlBaseApp}/mixpanel-dashboard/mixpanel-dashboard.component.ts`,
+    },
+    path: 'mixpanel-dashboard',
+    loadComponent: () =>
+      import('./mixpanel-dashboard/mixpanel-dashboard.component').then((m) => m.MixpanelDashboardComponent),
+  },
+  {
+    data: {
+      type: ExampleEnum.DRAG_DROP,
+      label: 'Drag & Drop Dashboard Builder',
+      srcUrl: `${srcUrlBaseApp}/drag-drop-dashboard/drag-drop-dashboard.component.ts`,
+    },
+    path: 'drag-drop-dashboard',
+    loadComponent: () =>
+      import('./drag-drop-dashboard/drag-drop-dashboard.component').then((m) => m.DragDropDashboardComponent),
+  },
 ]
